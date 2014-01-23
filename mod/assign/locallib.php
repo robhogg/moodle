@@ -2292,6 +2292,7 @@ class assign {
         // Build a list of files to zip.
         $filesforzipping = array();
         $fs = get_file_storage();
+        $aggregate_filesize = 0;
 
         $groupmode = groups_get_activity_groupmode($this->get_course_module());
         // All users.
@@ -2350,12 +2351,44 @@ class assign {
                                                                    '_' .
                                                                    $zipfilename);
                                 $filesforzipping[$prefixedfilename] = $file;
+
+                                if(is_object($file) && method_exists($file, 'get_filesize')) {
+                                    $aggregate_filesize += $file->get_filesize();
+                                }
+
                             }
                         }
                     }
                 }
             }
         }
+        
+        // convert filesize to MB
+        $aggregate_filesize /= 1048576.0;
+
+        $downloadall_limit = $this->get_admin_config()->downloadall_limit;
+        $downloadall_limit_enabled = $this->get_admin_config()->downloadall_limit_enabled;
+
+        // Return and display error to user if limiting enabled, and $aggregate_filesize too big 
+        if($downloadall_limit_enabled && $aggregate_filesize > $downloadall_limit) {
+            $downloadall_toobig = sprintf(new lang_string('downloadall_toobig','mod_assign'), 
+                                        $aggregate_filesize,
+                                        $downloadall_limit); 
+            $header = new assign_header($this->get_instance(),
+                                        $this->get_context(),
+                                        '',
+                                        $this->get_course_module()->id,
+                                        get_string('downloadall', 'assign'));
+            $result .= $this->get_renderer()->render($header);
+            $result .= $this->get_renderer()->notification($downloadall_toobig);
+            $url = new moodle_url('/mod/assign/view.php', array('id'=>$this->get_course_module()->id,
+                                                                    'action'=>'grading'));
+            $result .= $this->get_renderer()->continue_button($url);
+            $result .= $this->view_footer();
+
+            return $result;
+        }
+
         $result = '';
         if (count($filesforzipping) == 0) {
             $header = new assign_header($this->get_instance(),

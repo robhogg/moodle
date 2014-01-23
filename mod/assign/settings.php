@@ -86,4 +86,19 @@ if ($ADMIN->fulltree) {
                                                     $description,
                                                     0));
 
+    $name = new lang_string('downloadall_limit_enabled', 'mod_assign');
+    $description = new lang_string('downloadall_limit_enabled_desc', 'mod_assign');
+    $settings->add(new admin_setting_configcheckbox('assign/downloadall_limit_enabled',
+                                                    $name,
+                                                    $description,
+                                                    1));
+
+    $name = new lang_string('downloadall_limit', 'mod_assign');
+    $description = new lang_string('downloadall_limit_desc', 'mod_assign');
+    $default = 1024;
+    $settings->add(new admin_setting_configtext('assign/downloadall_limit',
+                                                    $name,
+                                                    $description,
+                                                    $default,
+                                                    PARAM_INT));
 }
