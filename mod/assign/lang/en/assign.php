@@ -121,6 +121,7 @@ $string['downloadall_limit'] = '"Download all submissions" limit (MB)';
 $string['downloadall_limit_desc'] = 'Maximum aggregate file size permitted for the "Download all submissions" feature.';
 $string['downloadall_limit_enabled'] = 'Set size limit for "Download all submissions"';
 $string['downloadall_limit_enabled_desc'] = 'Zipping large downloads can affect system performance. This allows you to set a limit on the maximum aggregate submission size for this feature.';
+$string['downloadall_pleasewait'] = 'Download started - please wait';
 $string['downloadall_toobig'] = 'Sorry, size of files to be downloaded (%0.2fMB) exceeds the %dMB limit configured on this system. Please download submissions individually, or speak to your administrator.';
 $string['duedate'] = 'Due date';
 $string['duedate_help'] = 'This is when the assignment is due. Submissions will still be allowed after this date but any assignments submitted after this date are marked as late. To prevent submissions after a certain date - set the assignment cut off date.';

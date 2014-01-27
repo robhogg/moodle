@@ -226,6 +226,10 @@ class mod_assign_renderer extends plugin_renderer_base {
             $o .= $this->output->box_end();
         }
 
+        $this->page->requires->string_for_js('downloadall', 'assign');
+        $this->page->requires->string_for_js('downloadall_pleasewait', 'assign');
+        $this->page->requires->js_init_call('M.mod_assign.downloadall_click');
+
         return $o;
     }
 

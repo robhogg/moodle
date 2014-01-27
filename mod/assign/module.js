@@ -210,4 +210,38 @@ M.mod_assign.init_plugin_summary = function(Y, subtype, type, submissionid) {
             }
         });
     }
-}
+};
+
+M.mod_assign.downloadall_click = function(Y) {
+    var downloadall = M.util.get_string('downloadall', 'assign');
+    var downloadallwait = M.util.get_string('downloadall_pleasewait', 'assign');
+    Y.all('a[href*=downloadall]').each(
+        function(node) {
+            Y.on('click', function() {
+                href = node.getAttribute('href');
+                node.setAttribute('href', 'javascript: void(0)');
+                nodecontent = node.getContent();
+                nodecontent = nodecontent.replace(downloadall, downloadallwait);
+                node.setContent(nodecontent);
+                window.location.href = href;
+            }, node);
+        }
+    );
+
+    optionlink = Y.one('option[value*=downloadall]');
+    if(optionlink) {
+        Y.on('click',
+            function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                href = optionlink.getAttribute('value');
+                optioncontent = optionlink.getContent();
+                optioncontent = optioncontent.replace(downloadall,downloadallwait);
+                optionlink.setContent(optioncontent);
+                window.location.href = href;
+                optionlink.setAttribute('value','');
+            }, 
+        optionlink);
+    }
+};
+
