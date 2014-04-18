@@ -253,6 +253,11 @@ class block_navigation extends block_base {
      * @param bool $recurse Recurse all children
      */
     public function trim(navigation_node $node, $mode=1, $long=50, $short=25, $recurse=true) {
+        // Has unpredictable results if text contains HTML tags [MDL-44564]
+        $node->text = strip_tags($node->text);
+        if(is_string($node->shorttext)) {
+            $node->shorttext = strip_tags($node->shorttext);
+        }
         switch ($mode) {
             case self::TRIM_RIGHT :
                 if (core_text::strlen($node->text)>($long+3)) {
