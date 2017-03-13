@@ -222,7 +222,9 @@ class enrol_ldap_plugin extends enrol_plugin {
             // Skip and clear array of current enrolments (to prevent unenrolment) if ldapconnection fails.
             // Fix for MDL-56732.
             if ($enrolments[$role->id]['ext'] === false) {
-                error_log("LDAP connection failed for role ID = " . $role->id . ". Skipping LDAP enrol / unenrol actions");
+                error_log("LDAP connection failed for " . $user->username
+                        . " with role ID = " . $role->id 
+                        . ". Skipping LDAP enrol / unenrol actions");
                 $enrolments[$role->id]['current'] = array();
                 continue;
             }
