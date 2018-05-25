@@ -54,6 +54,7 @@ class courses_view implements renderable, templatable {
     public function __construct($courses, $coursesprogress) {
         $this->courses = $courses;
         $this->coursesprogress = $coursesprogress;
+        $this->showtimeindependent = get_config('block_myoverview', 'showtimeindependent');
     }
 
     /**
@@ -69,11 +70,15 @@ class courses_view implements renderable, templatable {
 
         // Build courses view data structure.
         $coursesview = [
-            'hascourses' => !empty($this->courses)
+            'hascourses' => !empty($this->courses),
+            'showtimeindependent' => ($this->showtimeindependent == 1)? true:false
         ];
 
         // How many courses we have per status?
         $coursesbystatus = ['past' => 0, 'inprogress' => 0, 'future' => 0];
+        if ($this->showtimeindependent) {
+            $coursesbystatus['timeindependent'] = 0;
+        }
         foreach ($this->courses as $course) {
             $courseid = $course->id;
             $context = \context_course::instance($courseid);
@@ -138,6 +143,15 @@ class courses_view implements renderable, templatable {
                 $coursesview['future']['pages'][$futurepages]['page'] = $futurepages + 1;
                 $coursesview['future']['haspages'] = true;
                 $coursesbystatus['future']++;
+            } else if ($this->showtimeindependent && $exportedcourse->enddate == 0) {
+                // Courses which do not have an end date set.
+                $timeindependentpages = floor($coursesbystatus['timeindependent'] / $this::COURSES_PER_PAGE);
+
+                $coursesview['timeindependent']['pages'][$timeindependentpages]['courses'][] = $exportedcourse;
+                $coursesview['timeindependent']['pages'][$timeindependentpages]['active'] = ($timeindependentpages == 0 ? true : false);
+                $coursesview['timeindependent']['pages'][$timeindependentpages]['page'] = $timeindependentpages + 1;
+                $coursesview['timeindependent']['haspages'] = true;
+                $coursesbystatus['timeindependent']++;
             } else {
                 // Courses still in progress. Either their end date is not set, or the end date is not yet past the current date.
                 $inprogresspages = floor($coursesbystatus['inprogress'] / $this::COURSES_PER_PAGE);
