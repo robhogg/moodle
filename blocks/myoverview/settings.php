@@ -36,4 +36,8 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configselect('block_myoverview/defaulttab',
         get_string('defaulttab', 'block_myoverview'),
         get_string('defaulttab_desc', 'block_myoverview'), 'timeline', $options));
+
+    $settings->add(new admin_setting_configcheckbox('block_myoverview/showtimeindependent',
+        get_string('timeindependent', 'block_myoverview'),
+        get_string('timeindependent_desc', 'block_myoverview'), 0));
 }

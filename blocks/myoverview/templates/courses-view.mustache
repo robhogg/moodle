@@ -29,6 +29,11 @@
             <a class="btn btn-default active" href="#myoverview_courses_view_in_progress" data-toggle="tab">
                 {{#str}} inprogress, block_myoverview {{/str}}
             </a>
+            {{#showtimeindependent}}
+            <a class="btn btn-default" href="#myoverview_courses_view_timeindependent" data-toggle="tab">
+                {{#str}} timeindependent, block_myoverview {{/str}}
+            </a>
+            {{/showtimeindependent}}
             <a class="btn btn-default" href="#myoverview_courses_view_future" data-toggle="tab">
                 {{#str}} future, block_myoverview {{/str}}
             </a>
@@ -57,6 +62,27 @@
                 </div>
             {{/inprogress}}
         </div>
+        {{#showtimeindependent}}
+        <div class="tab-pane fade in" id="myoverview_courses_view_timeindependent">
+            {{#timeindependent}}
+                {{< block_myoverview/courses-view-by-status }}
+                    {{$id}}courses-view-timeindependent{{/id}}
+                    {{$status}}1{{/status}}
+                    {{$pagingbarid}}pb-for-timeindependent{{/pagingbarid}}
+                    {{$pagingcontentid}}pc-for-timeindependent{{/pagingcontentid}}
+                {{/ block_myoverview/courses-view-by-status }}
+            {{/timeindependent}}
+            {{^timeindependent}}
+                <div class="text-xs-center text-center m-t-3">
+                    <img class="empty-placeholder-image-lg"
+                         src="{{urls.nocourses}}"
+                         alt="{{#str}} nocoursestimeindependent, block_myoverview {{/str}}"
+                         role="presentation">
+                    <p class="text-muted m-t-1">{{#str}} nocoursestimeindependent, block_myoverview {{/str}}</p>
+                </div>
+            {{/timeindependent}}
+        </div>
+        {{/showtimeindependent}}
         <div class="tab-pane fade" id="myoverview_courses_view_future">
             {{#future}}
                 {{< block_myoverview/courses-view-by-status }}
