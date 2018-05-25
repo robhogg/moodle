@@ -14,6 +14,7 @@ Feature: The my overview block allows users to easily access their courses and s
       | Course 1 | C1        | 0        | ##1 month ago##             | ##15 days ago## |
       | Course 2 | C2        | 0        | ##yesterday##               | ##tomorrow## |
       | Course 3 | C3        | 0        | ##first day of next month## | ##last day of next month## |
+      | Course 4 | C4        | 0        | ##yesterday## | 0 |
     And the following "activities" exist:
       | activity | course | idnumber  | name            | intro                   | timeopen      | timeclose     |
       | choice   | C2     | choice1   | Test choice 1   | Test choice description | ##yesterday## | ##tomorrow##  |
@@ -26,6 +27,7 @@ Feature: The my overview block allows users to easily access their courses and s
       | student1 | C1 | student |
       | student1 | C2 | student |
       | student1 | C3 | student |
+      | student1 | C4 | student |
 
   Scenario: View courses and upcoming activities on timeline view
     Given I log in as "student1"
@@ -50,17 +52,22 @@ Feature: The my overview block allows users to easily access their courses and s
 
   Scenario: See the courses I am enrolled by their status on courses view
     Given I log in as "student1"
+    And the following config values are set as admin:
+      | showtimeindependent | 0 |
     And I click on "Courses" "link" in the "Course overview" "block"
     And I click on "In progress" "link" in the "Course overview" "block"
     And I should see "Course 2" in the "Course overview" "block"
+    And I should see "Course 4" in the "Course overview" "block"
     And I should not see "Course 1" in the "Course overview" "block"
     And I click on "Future" "link" in the "Course overview" "block"
     And I should see "Course 3" in the "Course overview" "block"
     And I should not see "Course 1" in the "Course overview" "block"
+    And I should not see "Time independent" in the "Course overview" "block"
     When I click on "Past" "link" in the "Course overview" "block"
     Then I should see "Course 1" in the "Course overview" "block"
     And I should not see "Course 2" in the "Course overview" "block"
     And I should not see "Course 3" in the "Course overview" "block"
+    And I should not see "Course 4" in the "Course overview" "block"
     And I log out
 
   Scenario: No activities should be displayed if the user is not enrolled
@@ -69,4 +76,13 @@ Feature: The my overview block allows users to easily access their courses and s
     And I should see "No upcoming activities" in the "Course overview" "block"
     When I click on "Courses" "link" in the "Course overview" "block"
     Then I should see "No courses" in the "Course overview" "block"
+    And I log out
+
+  Scenario: "Course 4" should be shown on "Time independent" tab if enabled
+    Given I log in as "student1"
+    And the following config values are set as admin:
+      | showtimeindependent | 1 |
+    And I click on "Courses" "link" in the "Course overview" "block"
+    When I click on "Time independent" in the "Course overview" "block"
+    Then I should see "Course 4" in the "Course overview" "block"
     And I log out
